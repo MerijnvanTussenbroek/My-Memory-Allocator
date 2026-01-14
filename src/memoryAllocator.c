@@ -51,7 +51,7 @@ void* myMalloc(int size)
                 // we store how big the used space is
                 buffer[pointer] = size - 1;
                 // we return the pointer
-                return (void *)pointer + 1;
+                return (void *) (&buffer[0]) + pointer + 1;
             }
         }
         pointer++;
