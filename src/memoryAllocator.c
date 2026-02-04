@@ -11,6 +11,8 @@ unsigned char buffer[128];
 // the pointer we return will point to the chunk after the first one, so when we free, we must go back 1 chunk to check how many we used
 // that way, we can free up x + 1 chunks again.
 
+// this malloc has a limit of 254 bytes
+
 void* myMalloc(int size)
 {
     // we check if the input is valid
@@ -111,46 +113,11 @@ void myFree(void* p)
     }
 }
 
-// we use chunks of size 4
-// in using chunks, we lose a bit of memory, but it makes the function itself more efficient
-void* myMallocWithChunk(int size)
-{
-
-    if(size <= 0)
-        return NULL;
-
-    int pointer = 0;
-
-    while(pointer < bufferSize)
-    {
-
-        if(buffer[pointer] == 0)
-        {
-
-
-        }
-        else
-        {
-
-        }
-
-        pointer += 4;
-    }
-
-    return NULL;
-}
-
-void myFreeWithChunk(void* p)
-{
-
-
-}
-
 void printBuffer()
 {
     printf("Printing the buffer\n");
 
-    for(int i = 0; i < bufferSize / 3; i++)
+    for(int i = 0; i < 35; i++)
     {
             printf("%u\n", buffer[i]);
     }

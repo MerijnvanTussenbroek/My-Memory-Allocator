@@ -37,6 +37,10 @@ int main()
 
     printBuffer();
 
+    myFree(test3);
+
+    test3 = (int *)myMalloc(sizeof(int) * 2);
+
     myFree(test1);
     myFree(test2);
     myFree(test3);
