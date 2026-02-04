@@ -1,10 +1,8 @@
 #include "memoryAllocator.h"
 
-#define NULL 0
+int bufferSize = 128;
 
-int bufferSize = 4096;
-
-char buffer[4096];
+char buffer[128];
 
 // we divide the buffer into chunks
 // these chunks will be 4 bytes
@@ -15,15 +13,15 @@ char buffer[4096];
 
 void* myMalloc(int size)
 {
+    // we check if the input is valid
+    if(size <= 0)
+        return NULL;
+
     // we increase the size by 1 for the extra chunk
     size++;
 
     // we initialize the pointer to be the first chunk
     int pointer = 0;
-
-    // we check if the input is valid
-    if(size <= 0)
-        return NULL;
 
     // we loop over our buffer
     while(pointer < bufferSize)
@@ -38,21 +36,43 @@ void* myMalloc(int size)
             for(int i = 0; i < size; i++)
             {
                 // if a spot isn't empty, it means something else is using it, meaning we cannot use it
+
+                if(pointer + i >= bufferSize)
+                {
+                    return NULL;
+                }
+
+
+                // if a spot isn't empty, it means something else is using it, meaning we cannot use it
+                // but we can still gain information from it.
+                // we know that the first spot taken in allocated memory stores how big the allocated memory is
+                // therefore we can do the following
+
                 if(buffer[pointer + i] != 0)
                 {
+                    char takenSize = buffer[pointer + i];
+
+                    pointer += takenSize-1;
                     usable = 0;
                     break;
                 }
+
             }
 
             // only if all the space is available can we use it
             if(usable == 1)
             {
                 // we store how big the used space is
-                buffer[pointer] = size - 1;
+                buffer[pointer] = size;
                 // we return the pointer
                 return (void *) (&buffer[0]) + pointer + 1;
             }
+        }
+        else
+        {
+            char takenSize = buffer[pointer];
+
+            pointer += takenSize-1;
         }
         pointer++;
     }
@@ -68,7 +88,7 @@ void myFree(void* p)
         return;
 
     // we convert the pointer to an integer
-    int pointer = (int)p;
+    int pointer = ((int)p - (int)(&buffer[0]));
 
     // we retrieve the size we need to clean
     int size = (int)buffer[pointer-1];
@@ -81,4 +101,47 @@ void myFree(void* p)
     {
         buffer[pointer + i] = 0;
     }
+}
+
+// we use chunks of size 4
+// in using chunks, we lose a bit of memory, but it makes the function itself more efficient
+void* myMallocWithChunk(int size)
+{
+
+    if(size <= 0)
+        return NULL;
+
+    int pointer = 0;
+
+    while(pointer < bufferSize)
+    {
+
+        if(buffer[pointer] == 0)
+        {
+
+
+        }
+
+        pointer += 4;
+    }
+
+    return NULL;
+}
+
+void myFreeWithChunk(void* p)
+{
+
+
+}
+
+void printBuffer()
+{
+    printf("Printing the buffer\n");
+
+    for(int i = 0; i < bufferSize / 2; i++)
+    {
+            printf("%u\n", buffer[i]);
+    }
+
+    printf("Done printing the buffer\n");
 }

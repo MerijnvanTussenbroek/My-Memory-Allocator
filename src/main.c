@@ -4,27 +4,35 @@
 
 int main()
 {
-    int* test;
 
-    test = (int *)myMalloc(sizeof(int));
+    int *test1, *test2;
 
-    *test = 1;
+    test1 = (int *)myMalloc(sizeof(int));
 
-    printf("location: %p\n", (void *)test);
+    printBuffer();
 
-    printf("number: %d\n", *test);
+    test2 = (int *)myMalloc(sizeof(int) * 2);
 
-    *test = 1;
+    printBuffer();
 
-    printf("number: %d\n", *test);
+    if(test1 == NULL)
+        return 1;
 
-    *test = 4;
+    if(test2 == NULL)
+        return 1;
 
-    printf("number: %d\n", *test);
+    *test1 = 16;
 
-    *test = 256;
+    //printBuffer();
 
-    printf("number: %d\n", *test);
+    *test2 = 256;
+
+    //printf("%d\n", *test1);
+
+    //printf("%d\n", *test2);
+
+    //printBuffer();
+
 
     printf("Program ended without crashing\n");
     return 0;
