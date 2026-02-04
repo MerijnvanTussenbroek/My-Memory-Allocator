@@ -2,7 +2,7 @@
 
 int bufferSize = 128;
 
-char buffer[128];
+unsigned char buffer[128];
 
 // we divide the buffer into chunks
 // these chunks will be 4 bytes
@@ -50,9 +50,12 @@ void* myMalloc(int size)
 
                 if(buffer[pointer + i] != 0)
                 {
-                    char takenSize = buffer[pointer + i];
+                    unsigned char takenSize = buffer[pointer + i];
 
-                    pointer += takenSize-1;
+                    pointer += takenSize-2;
+
+                    printf("test %d\n", (int)takenSize);
+
                     usable = 0;
                     break;
                 }
@@ -70,12 +73,17 @@ void* myMalloc(int size)
         }
         else
         {
-            char takenSize = buffer[pointer];
+            unsigned char takenSize = buffer[pointer];
+
+            printf("test2 %d\n", (unsigned int)takenSize);
 
             pointer += takenSize-1;
         }
+
         pointer++;
     }
+
+    printf("You went over the buffer\n");
 
     // if we have looped over the entire buffer, it means there is no more spacve available and we return null
     return NULL;
@@ -91,13 +99,13 @@ void myFree(void* p)
     int pointer = ((int)p - (int)(&buffer[0]));
 
     // we retrieve the size we need to clean
-    int size = (int)buffer[pointer-1];
+    unsigned char size = buffer[pointer-1];
 
     // we set this byte itself to 0
     buffer[pointer-1] = 0;
 
     // we loop over the byte and set it all to 0, freeing the memory
-    for(int i = 0; i < size; i++)
+    for(int i = 0; i < size-1; i++)
     {
         buffer[pointer + i] = 0;
     }
@@ -121,6 +129,10 @@ void* myMallocWithChunk(int size)
 
 
         }
+        else
+        {
+
+        }
 
         pointer += 4;
     }
@@ -138,7 +150,7 @@ void printBuffer()
 {
     printf("Printing the buffer\n");
 
-    for(int i = 0; i < bufferSize / 2; i++)
+    for(int i = 0; i < bufferSize / 3; i++)
     {
             printf("%u\n", buffer[i]);
     }
